@@ -1,0 +1,20 @@
+#声明版本
+version: "3"
+#定义服务
+services:
+  #熔断看板
+  prometheus:
+    #说明采用的镜像地址
+    image: prom/prometheus
+    #把外部yml文件挂载到容器中
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+  #熔断看板
+  grafana:
+    #说明采用的镜像地址
+    image: grafana/grafana
+    #镜像对外映射的端口
+    ports:
+      - "3000:3000"
