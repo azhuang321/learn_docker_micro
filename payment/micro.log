@@ -1,0 +1,2 @@
+{"level":"error","ts":"2021-05-27T00:05:37.046+0800","caller":"payment/main.go:27","msg":"error loading source consul: source not found: /micro/config"}
+{"level":"error","ts":"2021-05-27T00:05:37.143+0800","caller":"payment/main.go:48","msg":"Error 1045: Access denied for user ''@'172.17.0.1' (using password: NO)"}
