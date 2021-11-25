@@ -13,4 +13,4 @@ RUN set -ex && \
     rm -v /tmp/*.apk && \
     /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib
 
-
+# 为了编译可执行的micro  支持consul  编译好镜像后还得 增加容器 编译当前的main.go
