@@ -11,6 +11,7 @@ import (
 	"github.com/micro/go-micro/v2/client"
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/registry/etcd"
 	consul2 "github.com/micro/go-plugins/registry/consul/v2"
 	"github.com/micro/go-plugins/wrapper/select/roundrobin/v2"
 	opentracing2 "github.com/micro/go-plugins/wrapper/trace/opentracing/v2"
@@ -48,13 +49,24 @@ func main() {
 		}
 	}()
 
+	fmt.Println(consul)
+	// etcd 注册中心
+	etcdRegistry := etcd.NewRegistry(
+		func(options *registry.Options) {
+			options.Addrs = []string{
+				"127.0.0.1:2379",
+			}
+		})
+	fmt.Println(etcdRegistry)
+
 	// New Service
 	service := micro.NewService(
 		micro.Name("go.micro.api.cartApi"),
 		micro.Version("latest"),
 		micro.Address("0.0.0.0:8086"),
 		//添加 consul 注册中心
-		micro.Registry(consul),
+		//micro.Registry(consul),
+		micro.Registry(etcdRegistry),
 		//添加链路追踪
 		micro.WrapClient(opentracing2.NewClientWrapper(opentracing.GlobalTracer())),
 		//添加熔断

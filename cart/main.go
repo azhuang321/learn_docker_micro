@@ -5,10 +5,12 @@ import (
 	"cart/domain/repository"
 	service2 "cart/domain/service"
 	"cart/handler"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/micro/go-micro/v2"
 	log "github.com/micro/go-micro/v2/logger"
 	"github.com/micro/go-micro/v2/registry"
+	"github.com/micro/go-micro/v2/registry/etcd"
 	ratelimit "github.com/micro/go-plugins/wrapper/ratelimiter/uber/v2"
 	opentracing2 "github.com/micro/go-plugins/wrapper/trace/opentracing/v2"
 
@@ -34,6 +36,16 @@ func main() {
 			"127.0.0.1:8500",
 		}
 	})
+
+	fmt.Println(consul)
+	// etcd 注册中心
+	etcdRegistry := etcd.NewRegistry(
+		func(options *registry.Options) {
+			options.Addrs = []string{
+				"127.0.0.1:2379",
+			}
+		})
+	fmt.Println(etcdRegistry)
 
 	//链路追踪
 	t, io, err := common.NewTracer("go.micro.service.cart", "localhost:6831")
@@ -67,7 +79,8 @@ func main() {
 		//暴露的服务地址
 		micro.Address("0.0.0.0:8087"),
 		//注册中心
-		micro.Registry(consul),
+		//micro.Registry(consul),
+		micro.Registry(etcdRegistry),
 		//链路追踪
 		micro.WrapHandler(opentracing2.NewHandlerWrapper(opentracing.GlobalTracer())),
 		//添加限流
