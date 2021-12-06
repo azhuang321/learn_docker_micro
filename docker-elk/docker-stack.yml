@@ -2,6 +2,7 @@ version: '3.3'
 services:
   elasticsearch:
     image: elasticsearch:7.9.3
+    container_name: elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -14,6 +15,7 @@ services:
       network.publish_host: _eth0_
   logstash:
     image: logstash:7.9.3
+    container_name: logstash
     ports:
       - "5044:5044"
       - "5000:5000"
@@ -25,7 +27,23 @@ services:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
   kibana:
     image: kibana:7.9.3
+    container_name: kibana
     ports:
       - "5601:5601"
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+
+#  \cp -rf /mnt/e/my_project/docker-micro/docker-elk/docker-stack.yml ./
+  filebeat:
+    image: elastic/filebeat:7.9.3
+    container_name: filebeat
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./app:/var/log/app
+#    command:
+#      - /bin/bash
+#      - -c
+#      - |
+#        chmod go-w filebeat.yml
+#        ls -alh
+#        /usr/local/bin/docker-entrypoint -environment container
